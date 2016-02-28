@@ -16,7 +16,8 @@ namespace GameSimulator
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new GameUI(4));
+            //Application.Run(new GameUI(4));
+            Application.Run(new Welcome());
         }
     }
 }

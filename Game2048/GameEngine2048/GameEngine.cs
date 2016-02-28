@@ -122,18 +122,44 @@ namespace GameEngine2048
                 secondMatrix = GetLastMatrixFromHistory();
             }
 
-            TryChangeMatrix(secondMatrix);
-
-            return TheMatrixesAreIdentical(firstMatrix, secondMatrix);
+            return TheMatrixesAreIdenticalAfterAllMovesDone(firstMatrix, secondMatrix);
         }
 
-
-        private void TryChangeMatrix(int[,] secondMatrix)
+        private bool TheMatrixesAreIdenticalAfterAllMovesDone(int[,] firstMatrix, int[,] secondMatrix)
         {
             TryChangeMatrix(secondMatrix, EMoveType.Down);
-            TryChangeMatrix(secondMatrix, EMoveType.Up);
-            TryChangeMatrix(secondMatrix, EMoveType.Right);
-            TryChangeMatrix(secondMatrix, EMoveType.Left);
+            if (!TheMatrixesAreIdentical(firstMatrix, secondMatrix))
+            {
+                return false;
+            }
+            else
+            {
+                TryChangeMatrix(secondMatrix, EMoveType.Up);
+                if (!TheMatrixesAreIdentical(firstMatrix, secondMatrix))
+                {
+                    return false;
+                }
+                else
+                {
+                    TryChangeMatrix(secondMatrix, EMoveType.Right);
+                    if (!TheMatrixesAreIdentical(firstMatrix, secondMatrix))
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        TryChangeMatrix(secondMatrix, EMoveType.Left);
+                        if (!TheMatrixesAreIdentical(firstMatrix, secondMatrix))
+                        {
+                            return false;
+                        }
+                        else
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
         }
 
         private void AddCurrentStepToHistory()
@@ -328,7 +354,7 @@ namespace GameEngine2048
         private void MakeTheUndoMove()
         {
             this.historyMatrix.RemoveAt(this.historyMatrix.Count - 1);
-            GetLastMatrixFromHistory();
+            this.CurrentMatrix = GetLastMatrixFromHistory();
 
             this.historyScore.RemoveAt(historyScore.Count - 1);
             this.Score = this.historyScore[this.historyScore.Count - 1];
@@ -339,8 +365,6 @@ namespace GameEngine2048
         #endregion Public methods
 
         #region Private methods
-
-
 
         private void InitializeGameData()
         {
